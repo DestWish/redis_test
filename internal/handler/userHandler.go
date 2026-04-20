@@ -36,15 +36,16 @@ func (h *userHandler) Get (ctx context.Context, ID int) *models.User {
 		fmt.Printf("Ошибка поиска в бд %v \n", err)
 		return nil
 	}
-
+	fmt.Printf("Запись в кэш... \n")
 	if err := h.service.RedisClient.HSet(ctx, key, user).Err(); err != nil {
 		fmt.Printf("Ошибка кэширования: %v \n ответ из бд: \n", err)
 		return &user
 	}
 
 	if err := h.service.RedisClient.HGetAll(ctx, key).Scan(&cached); err == nil && cached.ID != 0 {
+		fmt.Println("ответ из кэша: ")
         return &cached
     }
-	
+	fmt.Println("ответ из бд(в кжше не нашлось, даже после записи): ")
 	return &user
 }
