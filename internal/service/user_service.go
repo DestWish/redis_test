@@ -1,6 +1,7 @@
 package service
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/DestWish/redis_test/internal/models"
@@ -10,17 +11,16 @@ import (
 
 type User_service struct {
 	Repo *repository.UserRepository
-	RedisClient *redis.Client
 }
 
 func New_userService(repo *repository.UserRepository, cache *redis.Client) *User_service{
-	return &User_service{Repo: repo, RedisClient: cache}
+	return &User_service{Repo: repo}
 }
 
-func (s *User_service) CreateUser(reqUser *models.User ) *models.User {
-	user, err := s.Repo.Create(reqUser)
+func (s *User_service) CreateUser(ctx context.Context, reqUser *models.User ) int {
+	ID, err := s.Repo.Create(ctx, reqUser)
 	if err != nil {
 		fmt.Printf("Error: %v", err)
 	}
-	return user
+	return ID
 }
