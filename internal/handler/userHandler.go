@@ -25,7 +25,7 @@ func (h *userHandler) Create(ctx context.Context, req models.Create_userRequest)
 func (h *userHandler) Get(ctx context.Context, ID uint) *models.User {
 	user, err := h.service.Repo.GetUser(ctx, ID)
 	if err != nil {
-		fmt.Printf("Ошибка запроса: %v", nil)
+		fmt.Printf("Ошибка запроса: %v", err)
 		return nil
 	}
 	return &user
