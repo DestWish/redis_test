@@ -25,13 +25,13 @@ func main() {
 
 	ctx := context.Background()
 
-	userRepo := repository.New_userRepo(db, cache)
+	userRepo := repository.NewUserRepo(db, cache)
 
-	userService := service.New_userService(userRepo)
+	userService := service.NewUserService(userRepo)
 
-	userHandler := handler.New_userHandler(userService)
+	userHandler := handler.NewUserHandler(userService)
 
-	userId := userHandler.Create(ctx, models.Create_userRequest{Email: "testMail", Name: "Obezjana"})
+	userId := userHandler.Create(ctx, models.CreateUserRequest{Email: "testMail", Name: "Obezjana"})
 
 	fmt.Printf("был создан Юзер, ID: %v \n", userId)
 

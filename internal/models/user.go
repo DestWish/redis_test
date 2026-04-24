@@ -6,7 +6,7 @@ type User struct {
 	Email string `json:"email" gorm:"email" redis:"email"`
 }
 
-type Create_userRequest struct {
+type CreateUserRequest struct {
 	Name string
 	Email string
 }

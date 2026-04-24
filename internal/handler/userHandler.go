@@ -12,11 +12,11 @@ type userHandler struct {
 	service *service.User_service
 }
 
-func New_userHandler(service *service.User_service) *userHandler {
+func NewUserHandler(service *service.User_service) *userHandler {
 	return &userHandler{service: service}
 }
 
-func (h *userHandler) Create(ctx context.Context, req models.Create_userRequest) uint {
+func (h *userHandler) Create(ctx context.Context, req models.CreateUserRequest) uint {
 	user := models.User{Email: req.Email, Name: req.Name}
 	ID := h.service.CreateUser(ctx, &user)
 	return ID

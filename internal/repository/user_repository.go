@@ -14,7 +14,7 @@ type UserRepository struct {
 	redisClient *redis.Client
 }
 
-func New_userRepo(db *gorm.DB, redisClient *redis.Client) *UserRepository {
+func NewUserRepo(db *gorm.DB, redisClient *redis.Client) *UserRepository {
 	return &UserRepository{db: db, redisClient: redisClient}
 }
 
