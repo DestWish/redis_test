@@ -27,7 +27,7 @@ func main() {
 
 	userRepo := repository.New_userRepo(db, cache)
 
-	userService := service.New_userService(userRepo, cache)
+	userService := service.New_userService(userRepo)
 
 	userHandler := handler.New_userHandler(userService)
 
