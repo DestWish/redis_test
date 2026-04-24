@@ -15,25 +15,27 @@ import (
 )
 
 func main() {
-
 	db, err := initDB()
 	if err != nil {
 		fmt.Printf("Failed to init database: %v", err)
 	}
+
 	cache := initCache()
 	defer cache.Close()
+
 	ctx := context.Background()
-	userRepo := repository.New_userRepo(db)
+
+	userRepo := repository.New_userRepo(db, cache)
 
 	userService := service.New_userService(userRepo, cache)
 
 	userHandler := handler.New_userHandler(userService)
 
-	user := userHandler.Create(models.Create_userRequest{Email: "testMail", Name: "Obezjana"})
+	userId := userHandler.Create(ctx, models.Create_userRequest{Email: "testMail", Name: "Obezjana"})
 
-	fmt.Printf("был создан Юзер %v \n", user)
+	fmt.Printf("был создан Юзер, ID: %v \n", userId)
 
-	fmt.Printf("Получим из кэша юзера %v \n", userHandler.Get(ctx, user.ID))
+	fmt.Printf("Получим из кэша юзера %v \n", userHandler.Get(ctx, userId))
 }
 
 

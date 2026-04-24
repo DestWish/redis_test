@@ -20,7 +20,7 @@ func New_userRepo (db *gorm.DB, redisClient *redis.Client) *UserRepository {
 }
 
 func (r *UserRepository) userCaching(ctx context.Context, user *models.User) error {
-	key := strconv.Itoa(user.ID)
+	key := strconv.Itoa(int(user.ID))
 	if err := r.redisClient.HSet(ctx, key, user).Err(); err != nil {
 		fmt.Printf("Ошибка кэширования: %v\n", err)
 		return err
@@ -29,7 +29,7 @@ func (r *UserRepository) userCaching(ctx context.Context, user *models.User) err
 	return nil
 }
 
-func (r *UserRepository) Create(ctx context.Context, user *models.User) (int, error) {
+func (r *UserRepository) Create(ctx context.Context, user *models.User) (uint, error) {
 	result := r.db.Create(user)
 	if err := result.Error; err != nil {
 		fmt.Printf("Error %v", err)
