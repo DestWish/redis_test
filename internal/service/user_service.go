@@ -28,3 +28,11 @@ func (s *User_service) CreateUser(ctx context.Context, req *models.CreateUserReq
 	}
 	return ID
 }
+
+func (s *User_service) ReadUser(ctx context.Context, req *models.ReadUserRequest) models.User {
+	user, err := s.Repo.GetUser(ctx, req.ID)
+	if err != nil {
+		fmt.Printf("Error: %v", err)
+	}
+	return user
+}

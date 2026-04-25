@@ -1,8 +1,6 @@
 package handler
 
 import (
-	"context"
-	"fmt"
 	"net/http"
 
 	"github.com/DestWish/redis_test/internal/models"
@@ -22,7 +20,7 @@ func (h * userHandler) RegisterRoutes(r *gin.Engine){
 	users := r.Group("api/users")
 	{
 		users.POST("", h.Create)
-		users.GET("")
+		users.GET("", h.Read)
 		users.PUT("")
 		users.DELETE("")
 	}
@@ -42,11 +40,15 @@ func (h *userHandler) Create(c *gin.Context) {
 	c.JSON(http.StatusCreated, userID)
 }
 
-func (h *userHandler) Read(ctx context.Context, ID uint) *models.User {
-	user, err := h.service.Repo.GetUser(ctx, ID)
-	if err != nil {
-		fmt.Printf("Ошибка запроса: %v", err)
-		return nil
+func (h *userHandler) Read(c *gin.Context) {
+	var req models.ReadUserRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
-	return &user
+
+	ctx := c.Request.Context()
+	user := h.service.ReadUser(ctx, &req)
+	
+	c.JSON(http.StatusOK, user)
 }
