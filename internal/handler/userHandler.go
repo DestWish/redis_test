@@ -22,7 +22,8 @@ func (h *userHandler) RegisterRoutes(r *gin.Engine) {
 	{
 		users.POST("", h.Create)
 		users.GET("/:id", h.Read)
-		users.PUT("")
+		users.PUT("", h.Update)
+		users.PATCH("")
 		users.DELETE("/:id", h.Delete)
 	}
 }
@@ -53,6 +54,19 @@ func (h *userHandler) Read(c *gin.Context) {
 	user := h.service.ReadUser(ctx, &req)
 
 	c.JSON(http.StatusOK, user)
+}
+
+func (h *userHandler) Update(c *gin.Context) {
+	var req models.UpdateUserRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx := c.Request.Context()
+	success := h.service.ReplaceUser(ctx, &req)
+
+	c.JSON(http.StatusOK, success)
 }
 
 func (h *userHandler) Delete(c *gin.Context) {

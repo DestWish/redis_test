@@ -62,6 +62,25 @@ func (r *UserRepository) GetUser(ctx context.Context, userID uint) (models.User,
 	return user, nil
 }
 
+func (r UserRepository) ReplaceUser(ctx context.Context, user models.User) (bool, error) {
+	result := r.db.Where("id = ?", user.ID).Select("*").Updates(user)
+
+	if result.Error != nil {
+		return false, result.Error
+	}
+
+	if result.RowsAffected == 0 {
+		fmt.Printf("User %v not found\n", result.RowsAffected)
+		return false, fmt.Errorf("user not found")
+	}
+
+	if err := r.userCaching(ctx, &user); err != nil {
+		fmt.Printf("Ошибка кэширования %v\n", err.Error())
+	}
+
+	return true, nil
+}
+
 func (r *UserRepository) Delete(ctx context.Context, userID uint) (bool, error) {
 	if err := r.db.Delete(&models.User{}, userID).Error; err != nil {
 		fmt.Printf("Данного пользователя не существует %v\n", err.Error())
