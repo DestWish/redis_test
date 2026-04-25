@@ -48,6 +48,18 @@ func (s *User_service) ReplaceUser(ctx context.Context, req *models.UpdateUserRe
 	return ok
 }
 
+func (s *User_service) PatchUser(ctx context.Context, req *models.PatchUserRequest) bool{
+	user := models.User{ID: req.ID, Name: req.Name, Email: req.Email}
+	ok, err := s.Repo.PatchUser(ctx, user)
+	if err != nil {
+		fmt.Printf("Error: %v", err)
+		return ok
+	}
+
+	return ok
+}
+
+
 func (s *User_service) DeleteUser(ctx context.Context, req *models.DeleteUserRequest) bool {
 	ok, err := s.Repo.Delete(ctx, req.ID)
 	if err != nil {
