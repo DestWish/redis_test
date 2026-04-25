@@ -1,13 +1,13 @@
 package main
 
 import (
-	"context"
 	"fmt"
 
 	"github.com/DestWish/redis_test/internal/handler"
 	"github.com/DestWish/redis_test/internal/models"
 	"github.com/DestWish/redis_test/internal/repository"
 	"github.com/DestWish/redis_test/internal/service"
+	"github.com/gin-gonic/gin"
 	"github.com/redis/go-redis/v9"
 
 	"gorm.io/driver/postgres"
@@ -23,19 +23,16 @@ func main() {
 	cache := initCache()
 	defer cache.Close()
 
-	ctx := context.Background()
-
 	userRepo := repository.NewUserRepo(db, cache)
 
 	userService := service.NewUserService(userRepo)
 
 	userHandler := handler.NewUserHandler(userService)
 
-	userId := userHandler.Create(ctx, models.CreateUserRequest{Email: "testMail", Name: "Obezjana"})
+	router := gin.Default()
+	userHandler.RegisterRoutes(router)
 
-	fmt.Printf("был создан Юзер, ID: %v \n", userId)
-
-	fmt.Printf("Получим из кэша юзера %v \n", userHandler.Get(ctx, userId))
+	router.Run(":8080")
 }
 
 

@@ -16,8 +16,13 @@ func NewUserService(repo *repository.UserRepository) *User_service {
 	return &User_service{Repo: repo}
 }
 
-func (s *User_service) CreateUser(ctx context.Context, reqUser *models.User) uint {
-	ID, err := s.Repo.Create(ctx, reqUser)
+func (s *User_service) CreateUser(ctx context.Context, req *models.CreateUserRequest) uint {
+	user := models.User{
+		Name: req.Name,
+		Email: req.Email,
+	}
+
+	ID, err := s.Repo.Create(ctx, &user)
 	if err != nil {
 		fmt.Printf("Error: %v", err)
 	}
