@@ -6,6 +6,7 @@ import (
 
 	"github.com/DestWish/redis_test/internal/models"
 	"github.com/DestWish/redis_test/internal/service"
+	"github.com/gin-gonic/gin"
 )
 
 type userHandler struct {
@@ -14,6 +15,16 @@ type userHandler struct {
 
 func NewUserHandler(service *service.User_service) *userHandler {
 	return &userHandler{service: service}
+}
+
+func (h * userHandler) RegisterRoutes(r *gin.Engine){
+	users := r.Group("api/users/:id")
+	{
+		users.POST("")
+		users.GET("")
+		users.PUT("")
+		users.DELETE("")
+	}
 }
 
 func (h *userHandler) Create(ctx context.Context, req models.CreateUserRequest) uint {
