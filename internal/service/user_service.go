@@ -36,3 +36,13 @@ func (s *User_service) ReadUser(ctx context.Context, req *models.ReadUserRequest
 	}
 	return user
 }
+
+func (s *User_service) DeleteUser(ctx context.Context, req *models.DeleteUserRequest) bool {
+	ok, err := s.Repo.Delete(ctx, req.ID)
+	if err != nil {
+		fmt.Printf("Error: %v", err)
+		return ok
+	}
+
+	return ok
+}

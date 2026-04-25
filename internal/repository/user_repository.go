@@ -62,6 +62,20 @@ func (r *UserRepository) GetUser(ctx context.Context, userID uint) (models.User,
 	return user, nil
 }
 
+func (r *UserRepository) Delete(ctx context.Context, userID uint) (bool, error) {
+	if err := r.db.Delete(&models.User{}, userID).Error; err != nil {
+		fmt.Printf("Данного пользователя не существует %v\n", err.Error())
+		return false, nil
+	}
+
+	key := userCacheKey(userID)
+	if err := r.redisClient.Del(ctx, key).Err(); err != nil {
+		fmt.Printf("Данный пользователь не кжширован %v\n", err.Error())
+	}
+
+	return true, nil
+}
+
 func userCacheKey(userID uint) string {
 	return fmt.Sprintf("user:%v", userID)
 }

@@ -15,3 +15,7 @@ type CreateUserRequest struct {
 type ReadUserRequest struct {
 	ID uint `json:"id"`
 }
+
+type DeleteUserRequest struct {
+	ID uint `json:"id"`
+}

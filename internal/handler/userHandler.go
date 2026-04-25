@@ -23,7 +23,7 @@ func (h *userHandler) RegisterRoutes(r *gin.Engine) {
 		users.POST("", h.Create)
 		users.GET("/:id", h.Read)
 		users.PUT("")
-		users.DELETE("")
+		users.DELETE("/:id", h.Delete)
 	}
 }
 
@@ -53,6 +53,20 @@ func (h *userHandler) Read(c *gin.Context) {
 	user := h.service.ReadUser(ctx, &req)
 
 	c.JSON(http.StatusOK, user)
+}
+
+func (h *userHandler) Delete(c *gin.Context) {
+	id, ok := parseUserId(c)
+	if !ok {
+		return
+	}
+
+	req := models.DeleteUserRequest{ID: id}
+
+	ctx := c.Request.Context()
+	success := h.service.DeleteUser(ctx, &req)
+
+	c.JSON(http.StatusNoContent, success)
 }
 
 func parseUserId(c *gin.Context) (uint, bool) {
