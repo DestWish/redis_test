@@ -37,7 +37,11 @@ func (h *userHandler) Create(c *gin.Context) {
 
 	ctx := c.Request.Context()
 
-	userID := h.service.CreateUser(ctx, &req)
+	userID, err := h.service.CreateUser(ctx, &req)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
 
 	c.JSON(http.StatusCreated, userID)
 }
@@ -51,7 +55,11 @@ func (h *userHandler) Read(c *gin.Context) {
 	req := models.ReadUserRequest{ID: id}
 
 	ctx := c.Request.Context()
-	user := h.service.ReadUser(ctx, &req)
+	user, err := h.service.ReadUser(ctx, &req)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
 
 	c.JSON(http.StatusOK, user)
 }
@@ -64,7 +72,11 @@ func (h *userHandler) Update(c *gin.Context) {
 	}
 
 	ctx := c.Request.Context()
-	success := h.service.ReplaceUser(ctx, &req)
+	success, err := h.service.ReplaceUser(ctx, &req)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
 
 	c.JSON(http.StatusOK, success)
 }
@@ -77,7 +89,11 @@ func (h *userHandler) Patch(c *gin.Context) {
 	}
 
 	ctx := c.Request.Context()
-	success := h.service.PatchUser(ctx, &req)
+	success, err := h.service.PatchUser(ctx, &req)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
 
 	c.JSON(http.StatusOK, success)
 }
@@ -91,7 +107,11 @@ func (h *userHandler) Delete(c *gin.Context) {
 	req := models.DeleteUserRequest{ID: id}
 
 	ctx := c.Request.Context()
-	success := h.service.DeleteUser(ctx, &req)
+	success, err := h.service.DeleteUser(ctx, &req)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
 
 	c.JSON(http.StatusNoContent, success)
 }
@@ -105,3 +125,4 @@ func parseUserId(c *gin.Context) (uint, bool) {
 
 	return uint(id), true
 }
+
