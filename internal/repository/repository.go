@@ -7,7 +7,7 @@ import (
 )
 
 type UserRepo interface {
-	CreateUser(context.Context, *models.CreateUserRequest) (uint, error) 
+	CreateUser(context.Context, *models.CreateUserRequest) (string, error) 
 	GetUser(context.Context, *models.ReadUserRequest) (models.User, error)
 	ReplaceUser(context.Context, *models.UpdateUserRequest) (bool, error)
 	PatchUser(context.Context, *models.PatchUserRequest) (bool, error)

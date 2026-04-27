@@ -2,7 +2,6 @@ package handler
 
 import (
 	"net/http"
-	"strconv"
 
 	"github.com/DestWish/redis_test/internal/models"
 	"github.com/DestWish/redis_test/internal/service"
@@ -47,12 +46,7 @@ func (h *userHandler) Create(c *gin.Context) {
 }
 
 func (h *userHandler) Read(c *gin.Context) {
-	id, ok := parseUserId(c)
-	if !ok {
-		return
-	}
-
-	req := models.ReadUserRequest{ID: id}
+	req := models.ReadUserRequest{Login: c.Param("login")}
 
 	ctx := c.Request.Context()
 	user, err := h.service.ReadUser(ctx, &req)
@@ -99,12 +93,7 @@ func (h *userHandler) Patch(c *gin.Context) {
 }
 
 func (h *userHandler) Delete(c *gin.Context) {
-	id, ok := parseUserId(c)
-	if !ok {
-		return
-	}
-
-	req := models.DeleteUserRequest{ID: id}
+	req := models.DeleteUserRequest{Login: c.Param("login")}
 
 	ctx := c.Request.Context()
 	success, err := h.service.DeleteUser(ctx, &req)
@@ -116,13 +105,12 @@ func (h *userHandler) Delete(c *gin.Context) {
 	c.JSON(http.StatusNoContent, success)
 }
 
-func parseUserId(c *gin.Context) (uint, bool) {
-	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user_id"})
-		return 0, false
-	}
+// func parseUserId(c *gin.Context) (uint, bool) {
+// 	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
+// 	if err != nil {
+// 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user_id"})
+// 		return 0, false
+// 	}
 
-	return uint(id), true
-}
-
+// 	return uint(id), true
+// }
