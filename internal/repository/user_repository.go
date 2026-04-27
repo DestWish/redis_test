@@ -27,7 +27,7 @@ func (r *UserRepository) userCaching(ctx context.Context, user *models.User) err
 	return nil
 }
 
-func (r *UserRepository) Create(ctx context.Context, req *models.CreateUserRequest) (uint, error) {
+func (r *UserRepository) CreateUser(ctx context.Context, req *models.CreateUserRequest) (uint, error) {
 	user := &models.User{Name: req.Name, Email: req.Email}
 	if err := r.db.Model(&models.User{}).Create(user).Error; err != nil {
 		return 0, fmt.Errorf("Repo: Create user failed: %w", err)
@@ -91,7 +91,7 @@ func (r *UserRepository) PatchUser(ctx context.Context, req *models.PatchUserReq
 }
 
 
-func (r *UserRepository) Delete(ctx context.Context, req *models.DeleteUserRequest) (bool, error) {
+func (r *UserRepository) DeleteUser(ctx context.Context, req *models.DeleteUserRequest) (bool, error) {
 	if err := r.db.Delete(&models.User{}, req.ID).Error; err != nil {
 		return false, fmt.Errorf("Repo: User not found: %w", err)
 	}

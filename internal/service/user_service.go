@@ -8,29 +8,29 @@ import (
 )
 
 type User_service struct {
-	Repo *repository.UserRepository
+	repo repository.UserRepo
 }
 
-func NewUserService(repo *repository.UserRepository) *User_service {
-	return &User_service{Repo: repo}
+func NewUserService(repo repository.UserRepo) *User_service {
+	return &User_service{repo: repo}
 }
 
 func (s *User_service) CreateUser(ctx context.Context, req *models.CreateUserRequest) (uint, error) {
-	return s.Repo.Create(ctx, req)
+	return s.repo.CreateUser(ctx, req)
 }
 
 func (s *User_service) ReadUser(ctx context.Context, req *models.ReadUserRequest) (models.User, error) {
-	return s.Repo.GetUser(ctx, req)
+	return s.repo.GetUser(ctx, req)
 }
 
 func (s *User_service) ReplaceUser(ctx context.Context, req *models.UpdateUserRequest) (bool, error) {
-	return s.Repo.ReplaceUser(ctx, req)
+	return s.repo.ReplaceUser(ctx, req)
 }
 
 func (s *User_service) PatchUser(ctx context.Context, req *models.PatchUserRequest) (bool, error) {
-	return s.Repo.PatchUser(ctx, req)
+	return s.repo.PatchUser(ctx, req)
 }
 
 func (s *User_service) DeleteUser(ctx context.Context, req *models.DeleteUserRequest) (bool, error) {
-	return s.Repo.Delete(ctx, req)
+	return s.repo.DeleteUser(ctx, req)
 }
