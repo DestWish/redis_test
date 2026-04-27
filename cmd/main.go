@@ -5,7 +5,7 @@ import (
 
 	"github.com/DestWish/redis_test/internal/handler"
 	"github.com/DestWish/redis_test/internal/models"
-	"github.com/DestWish/redis_test/internal/repository"
+	"github.com/DestWish/redis_test/internal/repository/repoPostgres"
 	"github.com/DestWish/redis_test/internal/service"
 	"github.com/gin-gonic/gin"
 	"github.com/redis/go-redis/v9"
@@ -23,7 +23,7 @@ func main() {
 	cache := initCache()
 	defer cache.Close()
 
-	userRepo := repository.NewUserRepo(db, cache)
+	userRepo := repoPostgres.NewUserRepo(db, cache)
 
 	userService := service.NewUserService(userRepo)
 
@@ -35,21 +35,18 @@ func main() {
 	router.Run(":8080")
 }
 
-
-func initCache() (*redis.Client) {
+func initCache() *redis.Client {
 	rdb := redis.NewClient(&redis.Options{
-    Addr: "localhost:6379",
-    Password: "",
-    DB: 0,
-    Protocol: 2,
-  })
-  
-//docker run -d --name redis -p 6379:6379 redis:8.6.2
+		Addr:     "localhost:6379",
+		Password: "",
+		DB:       0,
+		Protocol: 2,
+	})
 
+	//docker run -d --name redis -p 6379:6379 redis:8.6.2
 
-  return rdb
+	return rdb
 }
-
 
 func initDB() (*gorm.DB, error) {
 	//docker run -d --name cards -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=cards -p 5432:5432 postgres:16-alpine
