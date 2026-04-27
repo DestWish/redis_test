@@ -20,10 +20,10 @@ func (h *userHandler) RegisterRoutes(r *gin.Engine) {
 	users := r.Group("api/users")
 	{
 		users.POST("", h.Create)
-		users.GET("/:id", h.Read)
+		users.GET("/:login", h.Read)
 		users.PUT("", h.Update)
 		users.PATCH("", h.Patch)
-		users.DELETE("/:id", h.Delete)
+		users.DELETE("/:login", h.Delete)
 	}
 }
 
