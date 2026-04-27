@@ -5,7 +5,7 @@ import (
 
 	"github.com/DestWish/redis_test/internal/handler"
 	"github.com/DestWish/redis_test/internal/models"
-	"github.com/DestWish/redis_test/internal/repository/repoPostgres"
+	repoPG "github.com/DestWish/redis_test/internal/repository/postgres"
 	"github.com/DestWish/redis_test/internal/service"
 	"github.com/gin-gonic/gin"
 	"github.com/redis/go-redis/v9"
@@ -23,7 +23,7 @@ func main() {
 	cache := initCache()
 	defer cache.Close()
 
-	userRepo := repoPostgres.NewUserRepo(db, cache)
+	userRepo := repoPG.NewUserRepo(db, cache)
 
 	userService := service.NewUserService(userRepo)
 
