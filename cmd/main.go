@@ -5,17 +5,20 @@ import (
 
 	"github.com/DestWish/redis_test/internal/handler"
 	"github.com/DestWish/redis_test/internal/models"
-	"github.com/DestWish/redis_test/internal/repository"
+	// repoPG "github.com/DestWish/redis_test/internal/repository/postgres"
+	repoMongo "github.com/DestWish/redis_test/internal/repository/mongo"
 	"github.com/DestWish/redis_test/internal/service"
 	"github.com/gin-gonic/gin"
 	"github.com/redis/go-redis/v9"
+	"go.mongodb.org/mongo-driver/v2/mongo"
+	"go.mongodb.org/mongo-driver/v2/mongo/options"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
 func main() {
-	db, err := initDB()
+	db, err := initMongoDB()
 	if err != nil {
 		fmt.Printf("Failed to init database: %v", err)
 	}
@@ -23,7 +26,8 @@ func main() {
 	cache := initCache()
 	defer cache.Close()
 
-	userRepo := repository.NewUserRepo(db, cache)
+	// userRepo := repoPG.NewUserRepo(db, cache)
+	userRepo := repoMongo.NewUserRepo(db, cache)
 
 	userService := service.NewUserService(userRepo)
 
@@ -35,21 +39,18 @@ func main() {
 	router.Run(":8080")
 }
 
-
-func initCache() (*redis.Client) {
+func initCache() *redis.Client {
 	rdb := redis.NewClient(&redis.Options{
-    Addr: "localhost:6379",
-    Password: "",
-    DB: 0,
-    Protocol: 2,
-  })
-  
-//docker run -d --name redis -p 6379:6379 redis:8.6.2
+		Addr:     "localhost:6379",
+		Password: "",
+		DB:       0,
+		Protocol: 2,
+	})
 
+	//docker run -d --name redis -p 6379:6379 redis:8.6.2
 
-  return rdb
+	return rdb
 }
-
 
 func initDB() (*gorm.DB, error) {
 	//docker run -d --name cards -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=cards -p 5432:5432 postgres:16-alpine
@@ -65,4 +66,17 @@ func initDB() (*gorm.DB, error) {
 	}
 
 	return db, nil
+}
+
+func initMongoDB() (*mongo.Client, error) {
+	uri := "mongodb://localhost:27017"
+	serverAPI := options.ServerAPI(options.ServerAPIVersion1)
+	opts := options.Client().ApplyURI(uri).SetServerAPIOptions(serverAPI)
+
+	client, err := mongo.Connect(opts)
+	if err != nil {
+		return nil, fmt.Errorf("failed connect to mongoDB: %w", err)
+	}
+
+	return client, nil
 }

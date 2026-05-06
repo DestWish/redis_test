@@ -1,32 +1,33 @@
 package models
 
 type User struct {
-	ID    uint   `json:"id" gorm:"ID" redis:"id"`
-	Name  string `json:"name" gorm:"name" redis:"name"`
-	Email string `json:"email" gorm:"email" redis:"email"`
+	Login    string   `json:"login" gorm:"login primaryKey" bson:"_id" redis:"login"`
+	Name  string `json:"name" gorm:"name" bson:"name" redis:"name"`
+	Email string `json:"email" gorm:"email" bson:"email" redis:"email"`
 }
 
 type CreateUserRequest struct {
+	Login string `json:"login"`
 	Name  string `json:"name"`
 	Email string `json:"email"`
 }
 
 type ReadUserRequest struct {
-	ID uint `json:"id"`
+	Login string `json:"login"`
 }
 
 type UpdateUserRequest struct {
-	ID    uint   `json:"id"`
+	Login string `json:"login"`
 	Name  string `json:"name"`
 	Email string `json:"email"`
 }
 
 type PatchUserRequest struct {
-	ID    uint    `json:"id"`
+	Login string `json:"login"`
 	Name  *string `json:"name"`
 	Email *string `json:"email"`
 }
 
 type DeleteUserRequest struct {
-	ID uint `json:"id"`
+	Login string `json:"login"`
 }
